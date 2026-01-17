@@ -1,0 +1,8 @@
+ultralytics
+grpcio
+grpcio-tools
+protobuf
+opencv-python-headless
+numpy
+confluent-kafka
+pydantic
