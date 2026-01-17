@@ -1,0 +1,6 @@
+opencv-python-headless
+numpy
+pydantic
+python-dotenv
+grpcio
+grpcio-tools
