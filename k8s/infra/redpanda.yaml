@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redpanda
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://charts.redpanda.com
+    chart: redpanda
+    targetRevision: 5.8.11
+    helm:
+      parameters:
+        - name: statefulset.replicas
+          value: "1"
+        - name: tuning.tune_aio_events
+          value: "false"
+        - name: resources.cpu.cores
+          value: "0.5" # Low for local
+        - name: resources.memory.container.max
+          value: "1.5Gi"
+        - name: external.enabled
+          value: "false"
+        - name: console.enabled
+          value: "true"
+        - name: console.service.type
+          value: "ClusterIP" # Access via port-forward as per story
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: redpanda
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

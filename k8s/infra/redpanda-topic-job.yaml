@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-topic-detections
+  namespace: redpanda
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: rpk
+          image: redpandadata/redpanda:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for Redpanda to be ready..."
+              sleep 30
+              rpk topic create events.detections -r 1 -p 1 --brokers redpanda-0.redpanda.redpanda.svc.cluster.local:9093
+      restartPolicy: OnFailure

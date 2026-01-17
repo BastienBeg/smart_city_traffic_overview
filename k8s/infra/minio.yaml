@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://charts.minio.io/
+    chart: minio
+    targetRevision: 5.0.12
+    helm:
+      values: |
+        mode: standalone
+        fullnameOverride: minio
+        rootUser: admin
+        rootPassword: password123
+        persistence:
+          enabled: true
+          size: 10Gi
+        buckets:
+          - name: sentinel-models
+            policy: none
+            purge: false
+          - name: sentinel-clips
+            policy: none
+            purge: false
+          - name: sentinel-datasets
+            policy: none
+            purge: false
+        service:
+          type: ClusterIP
+        console:
+          service:
+            type: ClusterIP
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: minio
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

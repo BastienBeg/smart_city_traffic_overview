@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hello-world
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BastienBeg/smart_city_traffic_overview.git # Assumption based on user path, likely need to verify or use local path if possible in dev
+    targetRevision: HEAD
+    path: k8s/apps/hello-world
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

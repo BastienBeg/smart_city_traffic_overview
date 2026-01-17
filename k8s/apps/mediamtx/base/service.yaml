@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mediamtx
+spec:
+  selector:
+    app: mediamtx
+  ports:
+  - name: rtsp-tcp
+    port: 8554
+    targetPort: 8554
+    protocol: TCP
+  - name: rtsp-udp
+    port: 8554
+    targetPort: 8554
+    protocol: UDP
+  - name: hls
+    port: 8888
+    targetPort: 8888
+  - name: webrtc
+    port: 8889
+    targetPort: 8889
