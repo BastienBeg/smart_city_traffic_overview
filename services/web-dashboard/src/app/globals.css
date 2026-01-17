@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/* Cyberpunk Modern Color Palette */
+:root {
+  --background: #050510;
+  --surface: #1A1A2E;
+  --primary: #00F0FF;
+  --neon: #00F0FF;
+  --success: #00FF94;
+  --alert: #FF2A6D;
+  --danger: #FF2A6D;
+  --warning: #FFC857;
+  --text-primary: #EAEAEA;
+  --text-muted: #8892B0;
+  --foreground: #EAEAEA;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-primary: var(--primary);
+  --color-neon: var(--neon);
+  --color-success: var(--success);
+  --color-alert: var(--alert);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, sans-serif;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Selection Styling */
+::selection {
+  background: var(--primary);
+  color: var(--background);
+}
+
+/* Base link styling */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--success);
+}
+
+/* Neon glow utility */
+.glow-primary {
+  box-shadow: 0 0 10px var(--primary), 0 0 20px rgba(0, 240, 255, 0.3);
+}
+
+.glow-success {
+  box-shadow: 0 0 10px var(--success), 0 0 20px rgba(0, 255, 148, 0.3);
+}
+
+.glow-alert {
+  box-shadow: 0 0 10px var(--alert), 0 0 20px rgba(255, 42, 109, 0.3);
+}
