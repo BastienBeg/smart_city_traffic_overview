@@ -9,6 +9,5 @@ resources:
   - redpanda-topic-job.yaml
   - minio-simple.yaml
   - postgresql/
-  - ingress.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/v2.10.1/manifests/install.yaml
 

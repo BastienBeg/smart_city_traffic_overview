@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sentinel-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: sentinel.local
+    http:
+      paths:
+      # Web Dashboard - root path
+      - path: /()(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: web-dashboard
+            port:
+              number: 3000
+      # API Gateway - /api prefix
+      - path: /api(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 8000
+      # MediaMTX WebRTC/HLS - /stream prefix
+      - path: /stream(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: mediamtx
+            port:
+              number: 8889
