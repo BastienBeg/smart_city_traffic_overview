@@ -1,5 +1,6 @@
 "use client";
 
+
 import { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 import { DetectionEvent, SystemMetricEvent, AppEvent, EventType } from "../types/events";
 
@@ -11,6 +12,10 @@ interface WebSocketContextType {
 }
 
 const WebSocketContext = createContext<WebSocketContextType | null>(null);
+
+// Configuration
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/ws";
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK_WS !== "false"; // Default to true if not explicitly false
 
 // Mock Data Generators (Moved/Adapted from page.tsx logic for consistency)
 const mockMessages: Record<EventType, string[]> = {
@@ -73,7 +78,8 @@ function generateMockEvent(cameraId?: string): AppEvent {
   const msgs = mockMessages[type];
   
   // Random camera if not specified
-  const targetCameraId = cameraId || `cam_0${Math.floor(Math.random() * 4) + 1}`;
+  const validCameraIds = ['iowa-us20-jfk', 'iowa-i80-280', 'cam_03', 'cam_04'];
+  const targetCameraId = cameraId || validCameraIds[Math.floor(Math.random() * validCameraIds.length)];
   
   return {
     id: `evt_${Date.now()}_${Math.random()}`,
@@ -93,13 +99,12 @@ function generateMockEvent(cameraId?: string): AppEvent {
 }
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
-  const [isConnected, setIsConnected] = useState(false);
+  // Initialize based on mode to avoid immediate effect update
+  const [isConnected, setIsConnected] = useState(USE_MOCK);
   const subscribersRef = useRef<Map<string | null, Set<(event: AppEvent) => void>>>(new Map());
   const wsRef = useRef<WebSocket | null>(null);
   
-  // Configuration
-  const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/ws";
-  const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK_WS !== "false"; // Default to true if not explicitly false
+
 
   // Handle broadcasting to subscribers
   const broadcast = useCallback((event: AppEvent) => {
@@ -135,7 +140,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (USE_MOCK) {
       console.log("[WebSocket] Using Mock Mode");
-      setIsConnected(true);
+      // Already set to true via initial state
       
       const interval = setInterval(() => {
         // Emit detection event
@@ -192,7 +197,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
             ws.close();
         };
     }
-  }, [WS_URL, USE_MOCK, broadcast]);
+  }, [broadcast]);
 
   return (
     <WebSocketContext.Provider value={{ isConnected, subscribe }}>

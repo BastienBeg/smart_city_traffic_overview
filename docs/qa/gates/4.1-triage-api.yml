@@ -1,0 +1,33 @@
+schema: 1
+story: '4.1'
+story_title: 'Triage API'
+gate: PASS
+status_reason: 'All ACs met, tests verified and passing.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2026-01-17T23:30:00+01:00'
+
+top_issues: []
+waiver: { active: false }
+
+quality_score: 100
+
+evidence:
+  tests_reviewed: 4
+  risks_identified: 0
+  trace:
+    ac_covered: [1, 2, 3, 4]
+    ac_gaps: []
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'Standard FastAPI reliance'
+  maintainability:
+    status: PASS
+    notes: 'Good separation of concerns'
+
+recommendations:
+  immediate: []
+  future:
+    - action: 'Remove unused verified field from ValidationRequest'
+      refs: ['services/common_lib/schemas/triage.py']

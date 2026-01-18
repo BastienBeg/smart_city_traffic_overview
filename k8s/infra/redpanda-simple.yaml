@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redpanda
+  namespace: redpanda
+spec:
+  serviceName: redpanda
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redpanda
+  template:
+    metadata:
+      labels:
+        app: redpanda
+    spec:
+      containers:
+      - name: redpanda
+        image: redpandadata/redpanda:latest
+        args:
+        - redpanda
+        - start
+        - --smp
+        - "1"
+        - --memory
+        - 512M
+        - --reserve-memory
+        - 0M
+        - --overprovisioned
+        - --node-id
+        - "0"
+        - --check=false
+        - --kafka-addr
+        - internal://0.0.0.0:9092,external://0.0.0.0:9093
+        - --advertise-kafka-addr
+        - internal://redpanda-0.redpanda.redpanda.svc.cluster.local:9092,external://redpanda-0.redpanda.redpanda.svc.cluster.local:9093
+        - --pandaproxy-addr
+        - internal://0.0.0.0:8082,external://0.0.0.0:8083
+        - --advertise-pandaproxy-addr
+        - internal://redpanda-0.redpanda.redpanda.svc.cluster.local:8082,external://redpanda-0.redpanda.redpanda.svc.cluster.local:8083
+        - --rpc-addr
+        - "0.0.0.0:33145"
+        - --advertise-rpc-addr
+        - "redpanda-0.redpanda.redpanda.svc.cluster.local:33145"
+        ports:
+        - containerPort: 9092
+          name: kafka-internal
+        - containerPort: 9093
+          name: kafka-external
+        - containerPort: 8082
+          name: proxy-internal
+        - containerPort: 8083
+          name: proxy-external
+        - containerPort: 33145
+          name: rpc
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1"
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redpanda
+  namespace: redpanda
+spec:
+  clusterIP: None
+  ports:
+  - port: 9092
+    targetPort: 9092
+    name: kafka-internal
+  - port: 9093
+    targetPort: 9093
+    name: kafka-external
+  - port: 8082
+    targetPort: 8082
+    name: proxy-internal
+  - port: 8083
+    targetPort: 8083
+    name: proxy-external
+  - port: 33145
+    targetPort: 33145
+    name: rpc
+  selector:
+    app: redpanda

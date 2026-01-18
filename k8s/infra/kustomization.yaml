@@ -3,8 +3,12 @@ kind: Kustomization
 namespace: argocd
 
 resources:
+  - namespaces.yaml
   - argocd.yaml
-  - redpanda.yaml
-  - minio.yaml
+  - redpanda-simple.yaml
   - redpanda-topic-job.yaml
+  - minio-simple.yaml
+  - postgresql/
+  - ingress.yaml
   - https://raw.githubusercontent.com/argoproj/argo-cd/v2.10.1/manifests/install.yaml
+

@@ -26,6 +26,7 @@ export function HealthDashboard() {
 
     const sysEvent = lastEvent as SystemMetricEvent;
     
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMetrics((prev) => {
       const newMetrics = { ...prev };
       

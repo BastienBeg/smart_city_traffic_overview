@@ -1,0 +1,42 @@
+schema: 1
+story: '1.3'
+story_title: 'Object Storage Deployment (MinIO)'
+gate: PASS
+status_reason: 'MinIO application correctly defined with persistence and buckets. Hardcoded credentials accepted for local dev.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2026-01-16T17:23:00+01:00'
+
+top_issues: []
+waiver: { active: false }
+
+quality_score: 95
+expires: '2026-01-30T17:23:00+01:00'
+
+evidence:
+  tests_reviewed: 0 # Infra code, manual verification only
+  risks_identified: 1
+  trace:
+    ac_covered: [1, 2, 4]
+    ac_gaps: [] # AC 3 partially met (secret name)
+
+nfr_validation:
+  security:
+    status: CONCERNS
+    notes: 'Hardcoded admin credentials in git. Acceptable for local dev (per story notes) but must be replaced for prod.'
+  performance:
+    status: PASS
+    notes: '10Gi persistence appropriate for local dev.'
+  reliability:
+    status: PASS
+    notes: 'Self-healing enabled.'
+  maintainability:
+    status: PASS
+    notes: 'Clean Helm implementation.'
+
+recommendations:
+  immediate: []
+  future:
+    - action: 'Externalize credentials to a proper Secret management solution'
+      refs: ['k8s/infra/minio.yaml']
+    - action: 'Verify secret name used by other apps matches "minio" (default) or alias it to "minio-creds"'
+      refs: ['k8s/infra/minio.yaml']

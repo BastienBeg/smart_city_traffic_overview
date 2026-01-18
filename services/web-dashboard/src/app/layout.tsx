@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Orbitron } from "next/font/google";
 import { MainLayout } from "@/components/layout";
 import { WebSocketProvider } from "@/contexts/WebSocketContext";
+import QueryProvider from "@/components/providers/QueryProvider";
+import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "700"],
+});
+
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -22,10 +30,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
-        <WebSocketProvider>
-          <MainLayout>{children}</MainLayout>
-        </WebSocketProvider>
+      <body className={`${inter.variable} ${orbitron.variable} antialiased font-sans`}>
+        <QueryProvider>
+            <WebSocketProvider>
+            <MainLayout>{children}</MainLayout>
+            </WebSocketProvider>
+        </QueryProvider>
       </body>
     </html>
   );

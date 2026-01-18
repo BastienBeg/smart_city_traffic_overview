@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: camera-service
+  labels:
+    app: camera-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: camera-service
+  template:
+    metadata:
+      labels:
+        app: camera-service
+    spec:
+      containers:
+      - name: camera-service
+        image: camera-service:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "redpanda:9092"
+        - name: MEDIAMTX_URL
+          value: "rtsp://mediamtx:8554"
+        - name: INFERENCE_SERVICE_URL
+          value: "inference-service:50051"
+        - name: MINIO_ENDPOINT
+          value: "minio:9000"
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-secret
+              key: access-key
+              optional: true
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-secret
+              key: secret-key
+              optional: true
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "512Mi"
+            cpu: "500m"

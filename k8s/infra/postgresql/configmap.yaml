@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-init
+data:
+  init.sql: |
+    -- Smart City Sentinel Database Schema
+    
+    -- Detections table for storing inference results
+    CREATE TABLE IF NOT EXISTS detections (
+        id SERIAL PRIMARY KEY,
+        camera_id VARCHAR(100) NOT NULL,
+        timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        class_name VARCHAR(50) NOT NULL,
+        confidence FLOAT NOT NULL,
+        bbox_x FLOAT NOT NULL,
+        bbox_y FLOAT NOT NULL,
+        bbox_width FLOAT NOT NULL,
+        bbox_height FLOAT NOT NULL,
+        frame_path VARCHAR(255),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    -- Annotations table for triage/active learning
+    CREATE TABLE IF NOT EXISTS annotations (
+        id SERIAL PRIMARY KEY,
+        detection_id INTEGER REFERENCES detections(id),
+        camera_id VARCHAR(100) NOT NULL,
+        frame_path VARCHAR(255) NOT NULL,
+        bbox_x FLOAT NOT NULL,
+        bbox_y FLOAT NOT NULL,
+        bbox_width FLOAT NOT NULL,
+        bbox_height FLOAT NOT NULL,
+        original_class VARCHAR(50),
+        original_confidence FLOAT,
+        verified_class VARCHAR(50),
+        is_correct BOOLEAN,
+        verified_at TIMESTAMPTZ,
+        used_for_training BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    -- Cameras configuration table
+    CREATE TABLE IF NOT EXISTS cameras (
+        id VARCHAR(100) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        stream_url VARCHAR(512) NOT NULL,
+        latitude FLOAT,
+        longitude FLOAT,
+        is_active BOOLEAN NOT NULL DEFAULT TRUE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    -- Training jobs history
+    CREATE TABLE IF NOT EXISTS training_jobs (
+        id SERIAL PRIMARY KEY,
+        job_name VARCHAR(255) NOT NULL,
+        status VARCHAR(50) NOT NULL DEFAULT 'pending',
+        annotations_count INTEGER NOT NULL DEFAULT 0,
+        model_version VARCHAR(50),
+        started_at TIMESTAMPTZ,
+        completed_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    -- Create indexes for performance
+    CREATE INDEX IF NOT EXISTS idx_detections_camera_id ON detections(camera_id);
+    CREATE INDEX IF NOT EXISTS idx_detections_timestamp ON detections(timestamp);
+    CREATE INDEX IF NOT EXISTS idx_annotations_verified ON annotations(verified_at) WHERE verified_at IS NOT NULL;
+    CREATE INDEX IF NOT EXISTS idx_annotations_training ON annotations(used_for_training) WHERE used_for_training = FALSE;

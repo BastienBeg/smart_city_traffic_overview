@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  labels:
+    app: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: api-gateway:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://sentinel:sentinel_password@postgresql:5432/sentinel"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "redpanda:9092"
+        - name: MINIO_ENDPOINT
+          value: "minio:9000"
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-secret
+              key: access-key
+              optional: true
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-secret
+              key: secret-key
+              optional: true
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5

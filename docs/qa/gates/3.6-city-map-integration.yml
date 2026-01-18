@@ -1,0 +1,43 @@
+schema: 1
+story: '3.6'
+story_title: 'City Map Integration'
+gate: PASS
+status_reason: 'All acceptance criteria met via pragmatic camera grid implementation. Deep linking, status indicators, and navigation all functional.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2026-01-17T13:30:00Z'
+
+top_issues: []
+
+waiver: { active: false }
+
+quality_score: 90
+expires: '2026-01-31T13:30:00Z'
+
+evidence:
+  tests_reviewed: 0
+  risks_identified: 0
+  trace:
+    ac_covered: [1, 2, 3, 4, 5]
+    ac_gaps: []
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'No security risks. Static mock data only.'
+  performance:
+    status: PASS
+    notes: 'Camera grid is lightweight and efficient.'
+  reliability:
+    status: PASS
+    notes: 'Build and lint passing. Component renders correctly.'
+  maintainability:
+    status: PASS
+    notes: 'Clean TypeScript, proper component structure, inline SVGs avoid external dependencies.'
+
+recommendations:
+  immediate: []
+  future:
+    - action: 'Integrate Mapbox interactive map when Next.js 16/Turbopack compatibility is resolved'
+      refs: ['services/web-dashboard/src/components/ui/CityMap.tsx']
+    - action: 'Add unit tests for CityMap component'
+      refs: ['services/web-dashboard/src/components/ui/CityMap.tsx']

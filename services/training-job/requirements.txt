@@ -1,0 +1,19 @@
+# Core ML dependencies
+ultralytics>=8.1.0
+torch>=2.1.0
+onnx>=1.15.0
+onnxruntime>=1.16.0
+
+# Object storage
+minio>=7.2.0
+
+# Configuration
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# Utilities
+python-json-logger>=2.0.7
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.23.0

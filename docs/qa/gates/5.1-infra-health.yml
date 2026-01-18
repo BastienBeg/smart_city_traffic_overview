@@ -1,0 +1,30 @@
+schema: 1
+story: '5.1'
+story_title: 'Infrastructure Deployment & Health Check'
+gate: PASS
+status_reason: 'Core infrastructure is verified running. GitOps configuration refactored to match working manifests.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2026-01-18T16:45:00+01:00'
+
+top_issues: []
+waiver: { active: false }
+
+evidence:
+  tests_reviewed: 0 # Infrastructure only
+  risks_identified: 1
+  trace:
+    ac_covered: [1, 2, 3, 4, 5]
+    ac_gaps: []
+
+nfr_validation:
+  maintainability:
+    status: PASS
+    notes: 'Replacted complex Helm charts with simple Deployments for stability'
+  reliability:
+    status: PASS
+    notes: 'Official images used to avoid rate limits'
+
+recommendations:
+  future:
+    - action: 'Consider implementing HA for Redpanda and MinIO when scaling'
+      refs: ['k8s/infra/redpanda-simple.yaml']

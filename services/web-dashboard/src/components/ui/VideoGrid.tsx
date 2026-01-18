@@ -1,15 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import StreamCard, { CameraStatus } from "./StreamCard";
+import StreamCard from "./StreamCard";
 import { NoCamerasEmptyState } from "./EmptyState";
+import { useWindowSize } from "@/hooks/useWindowSize";
 
-export interface Camera {
-  id: string;
-  name: string;
-  status: CameraStatus;
-  thumbnailUrl?: string;
-}
+import { Camera } from "@/types/camera";
 
 export interface VideoGridProps {
   cameras: Camera[];
@@ -30,21 +26,12 @@ function getGridColumns(count: number): number {
 }
 
 export default function VideoGrid({ cameras }: VideoGridProps) {
-  const [width, setWidth] = useState(0);
+  const { width } = useWindowSize();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setWidth(window.innerWidth);
-
-    const handleResize = () => {
-      setWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // Calculate generic columns
@@ -85,6 +72,7 @@ export default function VideoGrid({ cameras }: VideoGridProps) {
           name={camera.name}
           status={camera.status}
           thumbnailUrl={camera.thumbnailUrl}
+          streamUrl={camera.streamUrl}
         />
       ))}
     </div>

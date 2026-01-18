@@ -1,0 +1,26 @@
+﻿
+> web-dashboard@0.1.0 build
+> next build
+
+Ôû▓ Next.js 16.1.3 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Ô£ô Compiled successfully in 14.8s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/5) ...
+  Generating static pages using 11 workers (1/5) 
+  Generating static pages using 11 workers (2/5) 
+  Generating static pages using 11 workers (3/5) 
+Ô£ô Generating static pages using 11 workers (5/5) in 4.0s
+  Finalizing page optimization ...
+
+Route (app)
+Ôöî Ôùï /
+Ôö£ Ôùï /_not-found
+Ôöö Ôùï /map
+
+
+Ôùï  (Static)  prerendered as static content
+

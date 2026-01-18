@@ -1,0 +1,67 @@
+﻿
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\app\page.tsx
+  27:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\app\page.tsx:27:7
+  25 |   useEffect(() => {
+  26 |     if (lastEvent && lastEvent.eventType !== "system") {
+> 27 |       setEvents((prev) => {
+     |       ^^^^^^^^^ Avoid calling setState() directly within an effect
+  28 |         // Keep last 50 events
+  29 |         const newEvents = [...prev, lastEvent as DetectionEvent];
+  30 |         if (newEvents.length > 50) {  react-hooks/set-state-in-effect
+
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\components\ui\CityMap.tsx
+  20:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\components\ui\CityMap.tsx:20:9
+  18 |       const targetCamera = cameras.find(c => c.id === cameraIdParam);
+  19 |       if (targetCamera) {
+> 20 |         setSelectedCamera(targetCamera);
+     |         ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  21 |       }
+  22 |     }
+  23 |   }, [cameraIdParam, cameras]);  react-hooks/set-state-in-effect
+
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\components\ui\HealthDashboard.tsx
+  29:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\components\ui\HealthDashboard.tsx:29:5
+  27 |     const sysEvent = lastEvent as SystemMetricEvent;
+  28 |     
+> 29 |     setMetrics((prev) => {
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  30 |       const newMetrics = { ...prev };
+  31 |       
+  32 |       if (sysEvent.metricType === "cpu_usage") {  react-hooks/set-state-in-effect
+
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\components\ui\StreamCard.tsx
+  105:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\components\ui\VideoGrid.tsx
+  39:5  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+C:\Users\basti\OneDrive\Bureau\code\antigravity\smart_city_overwiew\smart_city_traffic_overview\services\web-dashboard\src\contexts\WebSocketContext.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+
+Ô£û 6 problems (3 errors, 3 warnings)
+  0 errors and 2 warnings potentially fixable with the `--fix` option.
+

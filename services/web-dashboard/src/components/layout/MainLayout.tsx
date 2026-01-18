@@ -8,9 +8,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       <Sidebar />
-      <main className="ml-[5%] min-w-[calc(100%-80px)] max-w-[calc(100%-60px)] min-h-screen">
+      {/* Main content offset: matches Sidebar width (5%, min 60px, max 80px) */}
+      <main 
+        className="min-h-screen"
+        style={{ marginLeft: 'clamp(60px, 5%, 80px)' }}
+      >
         {children}
       </main>
     </div>
   );
 }
+

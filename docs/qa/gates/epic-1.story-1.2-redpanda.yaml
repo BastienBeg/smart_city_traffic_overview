@@ -1,0 +1,31 @@
+apiVersion: bmad.io/v1
+kind: QualityGate
+metadata:
+  story: 1.2
+  epic: 1
+  date: 2026-01-15
+  agent: qa
+  decision: PASS
+spec:
+  requirements:
+    functional:
+      - id: AC1
+        status: PASS
+        notes: Redpanda Helm setup matches specs.
+      - id: AC2
+        status: PASS
+        notes: Internal access only confirmed.
+      - id: AC3
+        status: PASS
+        notes: Topic creation job defined.
+      - id: AC4
+        status: PASS
+        notes: Console enabled.
+    nonFunctional:
+      - id: NFR1
+        status: PASS
+        notes: Low resource usage for Minikube.
+  risks:
+    - severity: Low
+      description: Fixed sleep in topic creation job might race on very slow machines.
+      mitigation: Accepted for Dev environment.

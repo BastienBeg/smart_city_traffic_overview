@@ -1,0 +1,53 @@
+schema: 1
+story: '5.0'
+story_title: 'K8s Manifest Scaffolding'
+gate: PASS
+status_reason: 'All K8s manifests created and validated. PostgreSQL StatefulSet, 4 app deployments, Ingress, and Dockerfile all meet requirements.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2026-01-18T16:01:00+01:00'
+
+top_issues: []
+waiver: { active: false }
+
+quality_score: 100
+expires: '2026-02-01T16:01:00+01:00'
+
+evidence:
+  manifests_created:
+    - k8s/infra/postgresql/ (StatefulSet, Service, Secret, ConfigMap, Kustomization)
+    - k8s/infra/minio.yaml
+    - k8s/infra/ingress.yaml
+    - k8s/apps/api-gateway/base/
+    - k8s/apps/camera-service/base/
+    - k8s/apps/training-controller/base/
+    - k8s/apps/web-dashboard/base/
+    - services/web-dashboard/Dockerfile
+  validation_results:
+    kustomize_build: PASS
+    yaml_syntax: PASS
+  ac_covered: [1, 2, 3, 4, 5, 6, 7, 8]
+  ac_gaps: []
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'Secrets used for credentials, RBAC scoped for training-controller, non-root Dockerfile'
+  performance:
+    status: PASS
+    notes: 'Resource limits defined for all deployments'
+  reliability:
+    status: PASS
+    notes: 'Liveness/readiness probes configured where applicable'
+  maintainability:
+    status: PASS
+    notes: 'Consistent directory structure, proper labeling, kustomize-ready'
+
+recommendations:
+  immediate: []
+  future:
+    - action: 'Replace :latest image tags with specific versions for production'
+      refs: ['k8s/apps/*/base/deployment.yaml']
+    - action: 'Add NetworkPolicies for service isolation'
+      refs: ['k8s/infra/']
+    - action: 'Add PodDisruptionBudgets for HA'
+      refs: ['k8s/apps/']

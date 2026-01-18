@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # Redpanda (Kafka-compatible message broker)
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v23.2.19
+    container_name: redpanda
+    command:
+      - redpanda
+      - start
+      - --smp=1
+      - --memory=512M
+      - --overprovisioned
+      - --node-id=0
+      - --kafka-addr=PLAINTEXT://0.0.0.0:9092
+      - --advertise-kafka-addr=PLAINTEXT://redpanda:9092
+    ports:
+      - "9092:9092"
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "rpk", "cluster", "health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Inference Service (gRPC server + Kafka producer)
+  inference-service:
+    build:
+      context: ./services/inference-service
+      dockerfile: Dockerfile
+    container_name: inference-service
+    environment:
+      - PORT=50051
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:9092
+      - KAFKA_ENABLED=true
+    ports:
+      - "50051:50051"
+    depends_on:
+      redpanda:
+        condition: service_healthy
+
+  # API Gateway (Backend API)
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    environment:
+      - DATABASE_URL=postgresql://user:password@postgres:5432/smartcity
+      - KAFKA_BOOTSTRAP_SERVERS=redpanda:9092
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redpanda:
+        condition: service_healthy
+
+  # PostgreSQL (Metadata & Triage)
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=smartcity
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d smartcity"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Camera Service (Video ingestion + gRPC client)
+  camera-service:
+    build:
+      context: ./services/camera-service
+      dockerfile: Dockerfile
+    container_name: camera-service
+    environment:
+      - CAMERA_ID=test-camera-01
+      - SOURCE_URL=/app/data/test_video.mp4
+      - INFERENCE_SERVICE_URL=inference-service:50051
+      - INFERENCE_FPS=2
+    volumes:
+      - ./data:/app/data:ro
+    depends_on:
+      - inference-service
+
+networks:
+  default:
+    name: smart-city-network
+
+volumes:
+  postgres_data:

@@ -5,7 +5,7 @@ import VideoOverlay from "./VideoOverlay";
 import { useWebSocket } from "@/contexts/WebSocketContext";
 import { useRef, useEffect, useState } from "react";
 
-export type CameraStatus = "Live" | "Offline" | "Alert";
+import { CameraStatus } from "@/types/camera";
 
 // Helper component to connect overlay to WS to avoid bloating StreamCard
 function ConnectedOverlay({ cameraId, isAnomaly }: { cameraId: string, isAnomaly: boolean }) {
@@ -44,6 +44,7 @@ export interface StreamCardProps {
   name: string;
   status: CameraStatus;
   thumbnailUrl?: string;
+  streamUrl?: string;
 }
 
 export default function StreamCard({
@@ -51,23 +52,24 @@ export default function StreamCard({
   name,
   status,
   thumbnailUrl,
+  streamUrl,
 }: StreamCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   const statusConfig = {
-    Live: {
+    online: {
       border: "border-success",
       glow: "glow-success",
       dot: "bg-success",
       text: "text-success",
     },
-    Offline: {
+    offline: {
       border: "border-text-muted",
       glow: "",
       dot: "bg-text-muted",
       text: "text-text-muted",
     },
-    Alert: {
+    alert: {
       border: "border-alert",
       glow: "glow-alert animate-pulse",
       dot: "bg-alert",
@@ -80,7 +82,7 @@ export default function StreamCard({
   return (
     <div
       className={`relative aspect-video bg-background rounded-lg border-2 ${config.border} ${
-        status === "Alert" ? config.glow : ""
+        status === "alert" ? config.glow : ""
       } overflow-hidden transition-all duration-200 group cursor-pointer`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -89,16 +91,16 @@ export default function StreamCard({
       {/* Thumbnail/Video Placeholder */}
       {/* Video Player or Thumbnail */}
       {/* Video Player or Thumbnail */}
-      {status === "Live" || status === "Alert" ? (
+        {status === "online" || status === "alert" ? (
         <>
             <VideoPlayer 
-                streamUrl={`http://localhost:8888/cam/${cameraId}/index.m3u8`} // Mock URL or real one
+                streamUrl={streamUrl || `http://localhost:8888/cam/${cameraId}/index.m3u8`}
                 className="absolute inset-0 w-full h-full object-cover"
                 // object-cover might conflict with player's internal sizing, but generic VideoPlayer has w/h 100%
             />
             {/* Overlay */}
             <div className="absolute inset-0 pointer-events-none z-10">
-                 <ConnectedOverlay cameraId={cameraId} isAnomaly={status === "Alert"} />
+                 <ConnectedOverlay cameraId={cameraId} isAnomaly={status === "alert"} />
             </div>
         </>
       ) : thumbnailUrl ? (
@@ -128,8 +130,8 @@ export default function StreamCard({
 
       {/* Status Indicator */}
       <div className="absolute top-2 right-2 flex items-center gap-1.5 px-2 py-1 bg-background/80 rounded-full backdrop-blur-sm">
-        <span className={`w-2 h-2 rounded-full ${config.dot} ${status === "Alert" ? "animate-pulse" : ""}`} />
-        <span className={`text-xs font-medium ${config.text}`}>{status}</span>
+        <span className={`w-2 h-2 rounded-full ${config.dot} ${status === "alert" ? "animate-pulse" : ""}`} />
+        <span className={`text-xs font-medium ${config.text}`}>{status.toUpperCase()}</span>
       </div>
 
       {/* Camera Name Overlay */}

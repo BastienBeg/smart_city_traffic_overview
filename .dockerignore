@@ -1,0 +1,14 @@
+**/node_modules
+**/.next
+.git
+__pycache__
+**/*.pyc
+.pytest_cache
+dataset/
+videos/
+.env
+.env.local
+.DS_Store
+coverage/
+dist/
+build/

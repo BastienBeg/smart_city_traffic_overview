@@ -1,0 +1,137 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: api-gateway
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BastienBeg/smart_city_traffic_overview.git
+    targetRevision: HEAD
+    path: k8s/apps/api-gateway/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sentinel
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: camera-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BastienBeg/smart_city_traffic_overview.git
+    targetRevision: HEAD
+    path: k8s/apps/camera-service/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sentinel
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: inference-service
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BastienBeg/smart_city_traffic_overview.git
+    targetRevision: HEAD
+    path: k8s/apps/inference-service/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sentinel
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: training-controller
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BastienBeg/smart_city_traffic_overview.git
+    targetRevision: HEAD
+    path: k8s/apps/training-controller/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sentinel
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: web-dashboard
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BastienBeg/smart_city_traffic_overview.git
+    targetRevision: HEAD
+    path: k8s/apps/web-dashboard/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sentinel
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mediamtx
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/BastienBeg/smart_city_traffic_overview.git
+    targetRevision: HEAD
+    path: k8s/apps/mediamtx/base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sentinel
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

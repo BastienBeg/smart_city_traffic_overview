@@ -20,6 +20,9 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 50051
+        env:
+        - name: MODEL_VERSION
+          value: "v1"
         resources:
           limits:
             memory: "1Gi"

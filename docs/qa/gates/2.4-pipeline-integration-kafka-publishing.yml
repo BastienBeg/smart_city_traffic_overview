@@ -1,0 +1,41 @@
+schema: 1
+story: '2.4'
+story_title: 'Pipeline Integration & Kafka Publishing'
+gate: PASS
+status_reason: 'All acceptance criteria met, integration tests passing, latency requirements satisfied.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2026-01-17T11:45:00+01:00'
+
+top_issues: []
+waiver: { active: false }
+
+# Extended fields
+quality_score: 100
+expires: '2026-01-31T11:45:00+01:00'
+
+evidence:
+  tests_reviewed: 1
+  risks_identified: 0
+  trace:
+    ac_covered: [1, 2, 3, 4]
+    ac_gaps: []
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'No critical issues; gRPC insecure is expected for internal.'
+  performance:
+    status: PASS
+    notes: 'Latency < 200ms achieved.'
+  reliability:
+    status: PASS
+    notes: 'Reconnect logic in place.'
+  maintainability:
+    status: PASS
+    notes: 'Code is clean and modular.'
+
+recommendations:
+  immediate: []
+  future:
+    - action: 'Consider connection pooling for higher throughput'
+      refs: ['services/inference-service/src/event_bus.py']
