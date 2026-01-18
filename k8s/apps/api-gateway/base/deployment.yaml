@@ -22,7 +22,7 @@ spec:
         - containerPort: 8000
         env:
         - name: DATABASE_URL
-          value: "postgresql://sentinel:sentinel_password@postgresql:5432/sentinel"
+          value: "postgresql+asyncpg://sentinel:sentinel_password@postgresql.database:5432/sentinel"
         - name: KAFKA_BOOTSTRAP_SERVERS
           value: "redpanda:9092"
         - name: MINIO_ENDPOINT

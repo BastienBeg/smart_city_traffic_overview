@@ -41,6 +41,10 @@ spec:
               optional: true
         - name: PYTHONUNBUFFERED
           value: "1"
+        - name: SOURCE_URL
+          value: "/app/test_video.mp4"
+        - name: RTSP_OUT_URL
+          value: "rtsp://mediamtx:8554/cam1"
         resources:
           limits:
             memory: "1Gi"
